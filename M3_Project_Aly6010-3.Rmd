@@ -1,0 +1,482 @@
+
+<html>
+<head>Module 3 Project </head>
+<body>
+
+<CENTER>
+<FONT SIZE=4, COLOR="RED"><B>MODULE 3 PROJECT REPORT </B>
+</FONT>
+
+<P><BR>
+<FONT SIZE = 4, COLOR="Green">
+<B>ALY6010 Introduction to Analytics</B>
+<BR><B>Northeastern University</B>
+</FONT>
+</CENTER>
+<FONT SIZE = 3, COLOR="BLUE">
+<BR> <B>STUDENT:</B> Manas Babbar
+<BR><B>Professor:</B> DR. Dee Chiluiza
+<BR><B>Date:</B> 15th Mar,2022
+</FONT>
+<BR>
+<P>
+---
+
+<P>
+<FONT SIZE = 3, COLOR="RED">
+<B>LIBRARY</B>
+</FONT>
+<P>
+
+```{r message=FALSE, warning=FALSE}
+#LIBRARIES
+#LIBRARY
+library(readxl)
+library(tidyverse) 
+library(dplyr) 
+library(DT) 
+library(RColorBrewer) 
+library(dbplyr) 
+library(psych) 
+library(FSA)
+library(kableExtra)
+#Datasets 
+library(readxl)
+Mpopulation <- read_excel("/Users/manasbabbar/Documents/ALY 6000 R project/A/M3ProjectData.xlsx")
+```
+<P>
+---
+<P>
+<FONT SIZE = 3, COLOR="RED">
+<B>INTRODUCTION</B>
+</FONT>
+<BR><BR>
+<BR><BR>
+<B>CONFIDENCE INTERVAL</B><BR><BR><P>
+A confidence interval is a level of values, restricted above and under the evaluation's mean, that clearly would contain a faint population parameter. Confidence level proposes the level of probability, or affirmation, that the confidence interval could contain the certified population parameter when you draw a capricious model regularly.What Is a Confidence Interval? (2021, October 19). Obviously, in the vernacular, "we are all things considered, very far A confidence interval is a level of values, restricted above and under the appraisal's mean, that evidently would contain a faint population parameter. Confidence level recommends the level of probability, or confirmation, that the confidence interval could contain the authentic population parameter when you draw a flighty model regularly.What Is a Confidence Interval? (2021, October 19). Obviously, in the vernacular, "we are in every practical sense, very far certain (confidence level) that by far most of these models (confidence intervals) contain the affirmed population parameter."
+<BR><BR>
+Investigators use confidence intervals to assess shortcoming in a model variable. For instance, an analyst picks various models carelessly from a near population and cycles a confidence interval with the objective that each model could 
+<P>
+<B>HYPOTHESIS TESTING Process </B><BR><BR><P>
+
+A confidence interval is a level of values, restricted above and under the evaluation's mean, that clearly would contain a faint population parameter. Confidence level recommends the level of probability, or accreditation, that the confidence interval could contain the real population parameter when you draw a flighty model regularly.What Is a Confidence Interval? (2021, October 19). Obviously, in the vernacular, "we are all things considered, very far A confidence interval is a level of values, restricted above and under the evaluation's mean, that evidently would contain a faint population parameter. Confidence level recommends the State the Hypothesis :- In Hypothesis testing, there are two sorts of theories for instance null and alternative. These rely upon assumptions about the population. Null hypothesis is connoted by and alternative hypothesis is implied by. For instance quality screen needs to check whether the created things are extraordinary or has abandons.(2020). Qsutra. Here,
+Null hypothesis (H0) - The things are incredible and has no deformations.
+Alternative hypothesis (H1) - The things are horrendous and has forsakes.
+Set the principles for decision - To set the models for decision, we set a level of significance (α). It tends to the probability of making misguided decision when the null hypothesis is legitimate. The typical alpha characteristics are 1% (0.01), 5% (0.05) and 10% (0.1).
+Process the test estimation - A test estimation is a sporadic variable not set in stone from test data and used in a hypothesis test. We figure test estimation considering hypothesis tests we perform. It might be z test, t test, F test, Chi-square, and so on For these tests, test estimation are called as Z estimation (or Z score), t estimation (t Score), 
+Process p regard - It is a probability regard and is resolved using the test estimation. It is used in hypothesis testing for making decision whether to accept or reject the null hypothesis. In less mind boggling words, to determine the significance of an end results and is stood out from the level of significance. It lies some place in the scope of 0 and 1.
+
+p regard < α - > Reject null hypothesis
+p regard > α - > Accept null hypothesis
+
+<P>
+---
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 1 
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B>In this task we will represent first 15 observations of data set.
+
+<P>
+```{r}
+#TASK 1
+kableExtra::kable(head(Mpopulation,15), caption = "ALL STORES TABLE ") %>% kable_classic(full_width = T, font_size = 20)
+```
+<BR><B>Observations:</B>In this task I have used head function and then kable function to represent the table adding graphical attributes like width and borders. also from the above table now we know that This data is about a population and its samples.
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 2 
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B>
+This Task is about  Doing Descriptive statistics for the Population and sample 1
+<P>
+```{r}
+#Task 2
+xmeanP=mean(Mpopulation$Population)
+xmeanS1=mean(Mpopulation$`Sample 1`,na.rm = T)
+meanVector= c(xmeanP,xmeanS1)
+xmedianP= median(Mpopulation$Population)
+xmedianS1=median(Mpopulation$`Sample 1`,na.rm = T)
+medianVector= c(xmedianP,xmedianS1)
+sdP=sd(Mpopulation$Population)
+sdS1=sd(Mpopulation$`Sample 1`,na.rm = T)
+sdVector=c(sdP,sdS1)
+PS1table=c(meanVector,medianVector,sdVector)
+PS1matrix=matrix(PS1table,byrow= T, ncol = 2)
+colnames(PS1matrix)=c("Population","Sample 1")
+rownames(PS1matrix)=c("Mean","Median","Standard Deviation")
+kableExtra::kable(PS1matrix, caption = " Discriptive Statistics ",digits = 2) %>% kable_classic(full_width = T, font_size = 20)
+```
+<BR><B>Observations:</B>
+
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 3
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll make a table for sample 1 for various confidence interval calculating their Z score, margin of error Upper Limit , lower Limit and width.
+<P>
+```{r}
+#TASK 3
+MeanS1=mean(Mpopulation$`Sample 1`,na.rm = T)
+SdS1= sd(Mpopulation$`Sample 1`,na.rm = T)
+n=160
+
+#Confidence intervals
+CL1= 0.90
+CL2= 0.96
+CL3= 0.99
+
+#Calculating Z score
+z90= qnorm((1+CL1)/2)
+z96= qnorm((1+CL2)/2)
+z99= qnorm((1+CL3)/2)
+
+#Sampling Error
+S1SE=SdS1/sqrt(n)
+
+#Calculating Marginal Error
+ME90 = z90 *S1SE 
+ME96 = z96 *S1SE 
+ME99 = z99 *S1SE 
+
+#Upper Limit 
+CIU90= MeanS1+ ME90
+CIU96= MeanS1+ ME96
+CIU99= MeanS1+ ME99
+
+#Lower Limit
+CIL90= MeanS1- ME90
+CIL96= MeanS1- ME96
+CIL99= MeanS1- ME99
+
+#Matrix Table
+CI=c("90%","96%","99%")
+Zscore=c(z90,z96,z99)%>%round(3)
+ME=c(ME90,ME96,ME99)%>%round(3)
+UL=c(CIU90,CIU96,CIU99)%>%round(3)
+LL=c(CIL90,CIL96,CIL99)%>%round(3)
+Width= c((CIU90-CIL90),(CIU96-CIL96),(CIU99-CIL99))%>%round(3)
+S1TABLE=c(CI,Zscore,ME,UL,LL,Width)
+S1TABLEmatrix=matrix(S1TABLE,byrow = F,nrow = 3)
+colnames(S1TABLEmatrix)=c("Confidence Interval","Z Score","Marginal Error", "Upper Limit","Lower Limit","Width")
+kableExtra::kable(S1TABLEmatrix, caption = " S1 TABLE ") %>% kable_classic(full_width = T, font_size = 20)
+
+```
+<BR><B>Observations:</B> Yes The mean value Sample 1 is between the Confidence interval all the three confidence interval Level as the mean is 1.03 and you can also see that with increase of CI the Margin of error and width also increases.
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 4
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll calculate the sample size for the above confidence interval using the formula (z*sd/ME)^2 
+<P>
+```{r}
+#TASK 4
+#Calculating Sample size for the confidence intervals of the above task.
+Nfor90= (z90)^2*(sdS1)^2/(ME90)^2
+Nfor96=(z96*sdS1/ME96)^2
+Nfor99=(z99*sdS1/ME99)^2
+SampleSize=c(Nfor90,Nfor96,Nfor99)
+SampleSizeV=c(CI,SampleSize)
+SampleSizematrix=matrix(SampleSizeV,byrow = F, nrow=3)
+colnames(SampleSizematrix)=c("Confidence Interval","Sample Size")
+kableExtra::kable(SampleSizematrix, caption = " Sample Size for Sample 1 ") %>% kable_classic(full_width = T, font_size = 20)
+
+```
+<BR><B>Observations:</B>Using the formula we are getting the sample size equals to 160 for all the thre confidence intervals. So there msut be some error in the data set otherwise its cant be reak.
+
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 5
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll be doing the same things what we did in the task 1 but the diffrence is that n is 23 which is less than 30 so we'll be using T score instead of Z
+<P>
+```{r}
+#TASK 5
+MeanS2=mean(Mpopulation$`Sample 2`,na.rm = T)
+SdS2= sd(Mpopulation$`Sample 2`,na.rm = T)
+ns2=23
+
+#Confidence intervals
+CL1= 0.90
+CL2= 0.96
+CL3= 0.99
+
+#Calculating Z score
+T90= qt((1+CL1)/2,ns2-1)
+T96= qt(t(1+CL2)/2,ns2-1)
+T99= qt((1+CL3)/2,ns2-1)
+
+#Sampling Error
+S2SE=SdS2/sqrt(ns2)
+
+#Calculating Marginal Error
+S2ME90 = T90 *S2SE 
+S2ME96 = T96 *S2SE 
+S2ME99 = T99 *S2SE 
+
+#Upper Limit 
+S2CIU90= MeanS2+ S2ME90
+S2CIU96= MeanS2+ S2ME96
+S2CIU99= MeanS2+ S2ME99
+
+#Lower Limit
+S2CIL90= MeanS2- S2ME90
+S2CIL96= MeanS2- S2ME96
+S2CIL99= MeanS2- S2ME99
+
+#Matrix Table
+S2CI=c("90%","96%","99%")
+S2Tscore=c(T90,T96,T99)%>%round(3)
+S2ME=c(S2ME90,S2ME96,S2ME99)%>%round(3)
+S2UL=c(S2CIU90,S2CIU96,S2CIU99)%>%round(3)
+S2LL=c(S2CIL90,S2CIL96,S2CIL99)%>%round(3)
+S2Width= c((S2CIU90-S2CIL90),(S2CIU96-S2CIL96),(S2CIU99-S2CIL99))%>%round(3)
+S2TABLE=c(S2CI,S2Tscore,S2ME,S2UL,S2LL,S2Width)
+S2TABLEmatrix=matrix(S2TABLE,byrow = F,nrow = 3)
+colnames(S2TABLEmatrix)=c("Confidence Interval","T Score","Marginal Error", "Upper Limit","Lower Limit","Width")
+kableExtra::kable(S2TABLEmatrix, caption = " S2 TABLE ") %>% kable_classic(full_width = T, font_size = 20)
+
+```
+<BR><B>Observations:</B>This table show us the T score value, ME, UL ,Ll
+ and width for the three confidence interval which was 90,96,99 and above table clear example that the margin of error increases with the confidence interval.
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 6
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll be doing proportion test with given values which are less then 1.7 in population and the sample 3
+<P>
+```{r}
+#TASK 6
+#Filterning out data from sample 3
+MeanS3= mean(Mpopulation$`Sample 3`,na.rm = T)
+nS3=1500
+SampleS3=subset(Mpopulation,`Sample 3`<1.7,na.rm=T)
+nS3_sample=nrow(SampleS3)
+SdS3_sample= sd(SampleS3$`Sample 3`,na.rm = T)
+MeanS3_sample= mean(SampleS3$`Sample 3`,na.rm = T)
+pS3_Success=nS3_sample/nS3
+pS3_Failure=1-pS3_Success
+
+#Filtering out data from population
+MeanPop= mean(Mpopulation$`Sample 3`,na.rm = T)
+nPop=nrow(Mpopulation)
+SamplePop=subset(Mpopulation,`Population`<1.7,na.rm=T)
+nPop_sample=nrow(SamplePop)
+SdPop= sd(Mpopulation$`Population`)
+pPop_Success=nPop_sample/nPop
+pPop_Failure=1-pPop_Success
+Pop_V=c(pPop_Success,pPop_Failure)
+S3_V=c(pS3_Success,pS3_Failure)
+P_table=c(Pop_V,S3_V)
+p_table_matrix=matrix(P_table,byrow=T,ncol=2)
+colnames(p_table_matrix)=c("P Success","P Failure")
+rownames(p_table_matrix)=c("Population","Sample 3")
+kableExtra::kable(p_table_matrix, caption = " Propotion Table ",digits = 3) %>% kable_classic(full_width = T, font_size = 20)
+
+#TABLE FOR Z SCORE , CI, WIDTH,Confidence intervals
+CL1= 0.90
+CL2= 0.96
+CL3= 0.99
+
+#Calculating Z score
+S3z90= qnorm((1+CL1)/2)
+S3z96= qnorm((1+CL2)/2)
+S3z99= qnorm((1+CL3)/2)
+
+#Sampling Error
+S3SE=sqrt((pS3_Success*pS3_Failure)/nS3_sample)
+
+#Calculating Marginal Error
+S3ME90 = S3z90 *S3SE
+S3ME96 = S3z96 *S3SE 
+S3ME99 = S3z99 *S3SE 
+
+#Upper Limit 
+S3CIU90= pS3_Success+ S3ME90
+S3CIU96= pS3_Success+ S3ME96
+S3CIU99= pS3_Success+ S3ME99
+
+#Lower Limit
+S3CIL90= pS3_Success- S3ME90
+S3CIL96= pS3_Success- S3ME96
+S3CIL99= pS3_Success- S3ME99
+
+#Matrix Table
+S3CI=c("90%","96%","99%")
+S3Zscore=c(S3z90,S3z96,S3z99)%>%round(3)
+S3ME=c(S3ME90,S3ME96,S3ME99)%>%round(3)
+S3UL=c(S3CIU90,S3CIU96,S3CIU99)%>%round(3)
+S3LL=c(S3CIL90,S3CIL96,S3CIL99)%>%round(3)
+S3Width= c((S3CIU90-S3CIL90),(S3CIU96-S3CIL96),(S3CIU99-S3CIL99))%>%round(3)
+S3TABLE=c(S3CI,S3Zscore,S3ME,S3UL,S3LL,S3Width)
+S3TABLEmatrix=matrix(S3TABLE,byrow = F,nrow = 3)
+colnames(S3TABLEmatrix)=c("Confidence Interval","Z Score (+/-)","Marginal Error", "Upper Limit","Lower Limit","Width")
+kableExtra::kable(S3TABLEmatrix, caption = " S3 TABLE ") %>% kable_classic(full_width = T, font_size = 20)
+```
+<BR><B>Observations:</B>This task we have made the subset data have all the observations lower than 1.7 using the function subset.then we have calculated the Z scores for the proportion ,Margin of error , UL, LL and width and represented it by foming a matrix and later representing it with kable function.
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 7
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll be performing chi square test for variance.Distribution. (2022, March 9).
+<P>
+```{r}
+#TASK 7
+CI90= 0.90
+CI96= 0.96
+CI99= 0.99
+n_samp4= 150
+
+VarPop= var(Mpopulation$Population, na.rm=TRUE)
+VarS4= var(Mpopulation$`Sample 4`, na.rm = TRUE)
+
+ci90_chi = qchisq(c((1 - CI90)/2, (1 + CI90)/2), df = 149, lower.tail = FALSE)
+ci96_chi = qchisq(c((1 - CI96)/2, (1 + CI96)/2), df = 149, lower.tail = FALSE)
+ci99_chi = qchisq(c((1 - CI99)/2, (1 + CI99)/2), df = 149, lower.tail = FALSE)
+
+
+ChiTable=c(ci90_chi,ci96_chi,ci99_chi)
+chiMatrix=matrix(ChiTable,byrow=F,ncol=3,nrow=2)
+colnames(chiMatrix) = c("90%", "96%", "99%")
+rownames(chiMatrix) = c("Chi-square right", "Chi-square left")
+kableExtra::kable(chiMatrix, caption = " S4 TABLE ",digits = 3) %>% kable_classic(full_width = T, font_size = 20)
+
+ci90Ll = ((n_samp4 - 1) * (VarS4 * VarS4))/ 178.485
+ci96Ll = ((n_samp4 - 1) * (VarS4 * VarS4))/ 186.560
+ci99Ll = ((n_samp4 - 1) * (VarS4 * VarS4))/ 197.211
+
+ci90UL = ((n_samp4 - 1) * (VarS4 * VarS4))/ 121.787
+ci96UL = ((n_samp4 - 1) * (VarS4 * VarS4))/ 115.726
+ci99UL = ((n_samp4 - 1) * (VarS4 * VarS4))/ 108.291
+
+cf90_width_samp4 = ci90UL - ci90Ll
+cf96_width_samp4 = ci96UL - ci96Ll
+cf99_width_samp4 = ci99UL - ci99Ll
+
+ULS4 = c(ci90UL, ci96UL, ci99UL)
+LLS4= c(ci90Ll, ci96Ll, ci99Ll)
+widths4 =c(cf90_width_samp4, cf96_width_samp4, cf99_width_samp4)
+
+S4Table = c(ULS4,LLS4,widths4)
+S4Matrix=matrix(S4Table,byrow = F,nrow = 3,ncol = 3)
+rownames(S4Matrix) = c("90%", "96%", "99%")
+colnames(S4Matrix) = c("Upper-Limit", "Lower-Limit", "CI Width")
+kableExtra::kable(S4Matrix, caption = " S4 TABLE ",digits = 3) %>% kable_classic(full_width = T, font_size = 20)
+```
+<BR><B>Observations:</B>There are two tables the first one shows the chi Left and chi right values for all the three intervals. Talking about the other table it shows Upper Limit and Lower Limit and the width thorught the above chi square values.
+
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 8 
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll Perform Hypothesis testing using the Z test.
+<P>
+```{r}
+#TASK 8
+#hypothesis Testing
+MeanPop=mean(Mpopulation$Population)
+SdPop=sd(Mpopulation$Population)
+MeanS5= mean(Mpopulation$`Sample 5`,na.rm = T)
+SdS5= sd(Mpopulation$`Sample 5`,na.rm = T)
+nS5=200
+HCI=0.95
+Ha=0.05
+Rcv=qnorm(1-(Ha/2))
+Lcv=qnorm(Ha/2)
+Ztv= (MeanS5-MeanPop)/(SdPop/sqrt(nS5))
+Pvalue= 1-pnorm(Ztv)
+xAns= Ztv > Rcv
+values=c(MeanPop,MeanS5,SdPop,Rcv,Ztv,Pvalue,Ztv >Rcv)
+values_matrix=matrix(values,byrow=F,ncol=1)
+rownames(values_matrix)=c("Mean Population","Mean Sample 5", "Standard Deviation Population","Right critical value","Z test value","P value","Result Z>CV (1=T/0=F)")
+colnames(values_matrix)="Values"
+kableExtra::kable(values_matrix, caption = " TASK 8 TABLE ",digits = 3) %>% kable_classic(full_width = T, font_size = 20)
+#Answer to Question
+print(paste("Yes,The Z value is greater as the result of Z > Cv =",xAns))
+```
+<BR><B>Observations:</B>From the above test we can se the Z value is greater than the CV so this shows that we can reject the null hypothesis also proved above.
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 9
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll do hypothesis testing using p values
+<P>
+```{r}
+#TASK 9
+HPvalue=(1-pnorm(Ztv))
+AlphaV = Ha/2
+T9Ans= HPvalue < AlphaV   
+#Answer to Question
+print(paste("Yes,The Alpha value is greater as the result of P value < Alpha value =",T9Ans))
+```
+<BR><B>Observations:</B>As expected this also shows that we can reject null hypothesis as Alpha value is greater than the P value and the answer is true as expected.from the previous task.
+
+<P><BR>
+<B><FONT SIZE=3, COLOR="Purple">
+TASK 10
+</FONT></B>
+<BR><BR><B>TASK DESCRIPTION:</B> In this task we'll repeat the task 8 and 9 the only diffrence is this time we'll be using T test as the number of observations are lower than 30.
+<P>
+```{r}
+#TASK 10
+#hypothesis Testing
+MeanPop=mean(Mpopulation$Population)
+SdPop=sd(Mpopulation$Population)
+MeanS6= mean(Mpopulation$`Sample 6`,na.rm = T)
+SdS6= sd(Mpopulation$`Sample 6`,na.rm = T)
+nS6=29
+T10CI=0.99
+T1Ha=0.01
+Rcv10=qt(1-(T1Ha/2),nS6-1)
+Lcv10=qt(T1Ha/2,nS6-1)
+Ttv= (MeanS6-MeanPop)/(SdPop/sqrt(nS6))
+Pvalue10= 1-pt(Ttv,nS6-1)
+T10Ans= Ttv > Rcv10
+values=c(MeanPop,MeanS6,SdPop,Rcv10,Ttv,Pvalue10,Ttv >Rcv10)
+values_matrix=matrix(values,byrow=F,ncol=1)
+rownames(values_matrix)=c("Mean Population","Mean Sample 6", "Standard Deviation Population","Right critical value","T test value","P value","Result T>CV (1=T/0=F)")
+colnames(values_matrix)="Values"
+kableExtra::kable(values_matrix, caption = " TASK 8 TABLE ",digits = 3) %>% kable_classic(full_width = T, font_size = 20)
+#Answer to Question with T values
+print(paste("Yes,The T value is greater as the result of Z > Cv =",T10Ans))
+#Answer to question with P values
+AlphaV10=T1Ha/2
+T10pAns= Pvalue10 < AlphaV10 
+#Answer to Question
+print(paste("Yes,The Alpha value is greater as the result of P value < Alpha value =",T10Ans))
+```
+<BR><B>Observations:</B>The table and the result wich is comming out is false that our test result is coming out to be false. and same is the case when we compared it with the P value which how it should be.
+<P>
+---
+<P><BR>
+<B><FONT SIZE=3, COLOR="RED">
+CONCLUSION
+</FONT></B><BR><BR>
+<B>Global Analysis</B><BR>
+From the project we found out that the Mean of sample is within the confidence interval talking about sample two we find out that the Z test and T test are very same just the width increase significantly as the curv keeps getting flatter in case of less observations. Also we learned about test proportion , test for variance, z hypothesis testing, T hypothesis testing .
+<BR><BR>
+<B>Skills learned</B><BR>
+In this project I learned new codes like creating subset and was the first time calculating variance. We learned about all kind of test and also performed it during the tasks also got pretty good ideas about the formulas that were performed int the above done tasks. overall it this project was a great learning for me.
+<P>
+---
+<P><BR>
+<B><FONT SIZE=3, COLOR="RED">
+BIBLIOGRAPHY
+</FONT></B>
+<BR><BR>
+Chi-Square Statistic: How to Calculate It / Distribution. (2022, March 9). Statistics How To. https://www.statisticshowto.com/probability-and-statistics/chi-square/<BR>
+ Hypothesis Testing | What is Hypothesis Testing? | Examples. (2020). Qsutra. https://qsutra.com/explore/knowledge-base/hypothesis-testing/<BR>
+ Hypothesis Test: Proportion. (2019). Proportions. https://stattrek.com/hypothesis-test/proportion.aspx<BR>
+What Is a Confidence Interval? (2021, October 19). Investopedia. https://www.investopedia.com/terms/c/confidenceinterval.asp
+<BR>
+
+<P>
+
+---
+<P><BR>
+<B><FONT SIZE=3, COLOR="RED">
+APPENDIX
+</FONT></B>
+<BR><BR>
+<B>M3_Project_ALY6010.Rmd
+
